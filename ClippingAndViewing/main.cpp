@@ -115,18 +115,22 @@ void clip()
     int i,j;
     double m,tmp;
     char c = 'A';
+    int danger = 0;
 
     if(needToClip == false) return;
 
     for(i = 0 ; i < numLine ; i++,c+=2)
     {
        if(visible[i] != 1) continue;
+       danger = 0;
+       if(line[i][0] == line[i][2]) danger++;
 
-       m = (double)((line[i][1] - line[i][3]) / (line[i][0] - line[i][2]));
+       if(danger == 0) m = (double)((line[i][1] - line[i][3]) / (line[i][0] - line[i][2]));
        ///
        if(regionCode[i][0] & 1)
          {
-            tmp = line[i][1] + m*(Xmin - line[i][0]);
+            if(danger == 0) tmp = line[i][1] + m*(Xmin - line[i][0]);
+            else tmp = Ymax;
             line[i][1] =  tmp;
             line[i][0] = Xmin;
 
@@ -136,7 +140,8 @@ void clip()
 
         else if(regionCode[i][0] & 2)
          {
-            tmp = line[i][1] + m*(Xmax - line[i][0]);
+            if(danger == 0) tmp = line[i][1] + m*(Xmax - line[i][0]);
+            else tmp == Ymax;
             line[i][1] =  (int)tmp;
             line[i][0] = Xmax;
 
@@ -145,7 +150,8 @@ void clip()
 
         else if(regionCode[i][0] & 4)
          {
-            tmp = (double)(line[i][0] + (Ymin - line[i][1])/m);
+            if(danger == 0)tmp = (double)(line[i][0] + (Ymin - line[i][1])/m);
+            else tmp = line[i][0];
             line[i][0] =  (int)tmp;
             line[i][1] = Ymin;
 
@@ -156,7 +162,8 @@ void clip()
 
         else if(regionCode[i][0] & 8)
          {
-            tmp = (double)(line[i][0] + (Ymax - line[i][1])/m);
+            if(danger == 0) tmp = (double)(line[i][0] + (Ymax - line[i][1])/m);
+            tmp = line[i][0];
             line[i][0] =  (int)tmp;
             line[i][1] = Ymax;
 
@@ -169,7 +176,8 @@ void clip()
 
         if(regionCode[i][1] & 1)
          {
-            tmp = line[i][3] + m*(Xmin - line[i][2]);
+            if(danger == 0)tmp = line[i][3] + m*(Xmin - line[i][2]);
+            else tmp = Ymax;
             line[i][3] =  (int)tmp;
             line[i][2] = Xmin;
 
@@ -178,7 +186,8 @@ void clip()
 
         else if(regionCode[i][1] & 2)
          {
-            tmp = line[i][3] + m*(Xmax - line[i][2]);
+            if(danger == 0)tmp = line[i][3] + m*(Xmax - line[i][2]);
+            else tmp = Ymax;
             line[i][3] =  (int)tmp;
             line[i][2] = Xmax;
 
@@ -188,7 +197,9 @@ void clip()
 
          else if(regionCode[i][1] & 4)
          {
-            tmp = (double)(line[i][2] + (Ymin - line[i][3])/m);
+            if(danger == 0)tmp = (double)(line[i][2] + (Ymin - line[i][3])/m);
+            else tmp = line[i][2];
+
             line[i][2] =  (int)tmp;
             line[i][3] = Ymin;
 
@@ -197,7 +208,9 @@ void clip()
 
          else if(regionCode[i][1] & 8)
          {
-            tmp = (double)(line[i][2] + (Ymax - line[i][3])/m);
+            if(danger == 0)tmp = (double)(line[i][2] + (Ymax - line[i][3])/m);
+            else tmp = line[i][2];
+
             line[i][2] =  (int)tmp;
             line[i][3] = Ymax;
 
@@ -336,9 +349,9 @@ void manualInput()
 
     numLine = 5;
 
-    line[0][0] = -100;
-    line[0][1] = -100;
-    line[0][2] = 100;
+    line[0][0] = -10;
+    line[0][1] = -10;
+    line[0][2] = -10;
     line[0][3] = 100;
 
     line[1][0] = -40;
