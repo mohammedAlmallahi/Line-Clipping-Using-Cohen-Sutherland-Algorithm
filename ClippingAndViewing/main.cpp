@@ -39,7 +39,7 @@ int polygonY[100];
 int numPolygon;
 
 int Xmin,Ymin,Xmax,Ymax;
-int line[100][4];
+double line[100][4];
 int regionCode[100][2];
 int visible[100];
 int numLine;
@@ -266,7 +266,7 @@ void buildRegionCode()
         if((regionCode[i][0] & regionCode[i][1]) == 0)
         {
             if(regionCode[i][0] == 0 && regionCode[i][1] == 0)
-                visible[i] = 2;
+                visible[i] = 2; //window er vitore
             else
             {
                 needToClip = true;
@@ -301,8 +301,11 @@ static void on(int button ,int state ,int x, int y)
 {
     if(state == 1) ///clicked
     {
-      if(needToClip) cout <<"Intersection points\n";
-      clip();
+      if(needToClip)
+      {
+            cout <<"Intersection points\n";
+            clip();
+      }
 
       glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
       display();
@@ -342,17 +345,17 @@ void userInput()
 
 void manualInput()
 {
-    Xmin = -50;
-    Ymin = -50;
-    Xmax = 50;
-    Ymax = 50;
+    Xmin = 20;
+    Ymin = 20;
+    Xmax = 250;
+    Ymax = 250;
 
-    numLine = 5;
+    numLine = 1;
 
-    line[0][0] = -10;
-    line[0][1] = -10;
-    line[0][2] = -10;
-    line[0][3] = 100;
+    line[0][0] = -50;
+    line[0][1] = -40;
+    line[0][2] = 300;
+    line[0][3] = 170;
 
     line[1][0] = -40;
     line[1][1] = -100;
@@ -389,8 +392,8 @@ int main(int argc, char *argv[])
 
     glutCreateWindow("View and Clip");
 
-    userInput();
-    //manualInput();
+    //userInput();
+    manualInput();
 
     initGL();
     glutDisplayFunc(display);
